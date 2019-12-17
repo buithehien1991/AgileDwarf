@@ -1,4 +1,4 @@
-class AddIssuePosition < ActiveRecord::Migration
+class AddIssuePosition < ActiveRecord::Migration[5.0]
   def self.up
     add_column :issues, :ir_position, :integer, :null => true, :default => nil
     add_index :issues, :ir_position

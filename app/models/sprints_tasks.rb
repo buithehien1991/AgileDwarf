@@ -1,6 +1,4 @@
 class SprintsTasks < Issue
-  unloadable
-
   acts_as_list :column => "ir_position"
 
   ORDER = 'case when issues.ir_position is null then 1 else 0 end ASC, case when issues.ir_position is NULL then issues.id else issues.ir_position end ASC'

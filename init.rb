@@ -6,7 +6,7 @@ Redmine::Plugin.register :AgileDwarf do
   name 'Agile dwarf plugin'
   author 'Mark Ablovacky'
   description 'Agile for Redmine'
-  version '0.0.3'
+  version '0.0.4.tsdv'
   url ''
 
   settings :default => {
@@ -30,4 +30,10 @@ Redmine::Plugin.register :AgileDwarf do
   menu :project_menu, :adsprints, { :controller => 'adsprints', :action => 'list' }, :caption => :label_menu_sprints, :after => :adtasks, :param => :project_id
   menu :project_menu, :adburndown, { :controller => 'adburndown', :action => 'show' }, :caption => :label_menu_burndown, :after => :adsprints, :param => :project_id
   menu :top_menu, :admytasks, {:controller=>'admytasks',:action=>'list'}, :caption=>:label_my_tasks_board
+
+  ActiveSupport::Reloader.to_prepare do
+    unless EnabledModule.included_modules.include?(EnabledModulePatch)
+      EnabledModule.send(:prepend, EnabledModulePatch)
+    end
+  end
 end

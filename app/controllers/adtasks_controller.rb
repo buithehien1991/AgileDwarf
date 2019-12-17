@@ -1,11 +1,5 @@
 class AdtasksController < ApplicationController
-  unloadable
-
-
-	
-
-
-  before_filter :find_project, :authorize
+  before_action :find_project, :authorize
 
   def list
     # data for filters

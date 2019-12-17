@@ -1,12 +1,11 @@
 class AdsprintinlController < ApplicationController
-  unloadable
-
-  before_filter :find_project, :authorize
+  before_action :find_project, :authorize
 
   def create
     attribs = params.select{|k,v| k != 'id' and Sprints.column_names.include? k }
-    attribs = Hash[*attribs.flatten]
-    sprint = Sprints.new(attribs)
+    attribs = (attribs || {}).deep_dup
+    sprint = Sprints
+    sprint.safe_attributes = attribs
     begin
       sprint.save!
     rescue => e

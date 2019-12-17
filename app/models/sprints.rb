@@ -1,6 +1,4 @@
 class Sprints < Version
-  unloadable
-
   validate :start_and_end_dates
 
   class << self

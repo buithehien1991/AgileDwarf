@@ -1,7 +1,5 @@
 class AdtaskinlController < ApplicationController
-  unloadable
-
-  before_filter :find_project, :authorize, :except=> :update
+  before_action :find_project, :authorize, :except=> :update
   
   def update
     task = SprintsTasks.find(params[:id])
@@ -23,16 +21,28 @@ class AdtaskinlController < ApplicationController
   def create
   	trackers_avail=@project.trackers().select('id').all().pluck(:id)
     attribs = params.select{|k,v| k != 'id' and SprintsTasks.column_names.include? k }
+    attribs = (attribs || {}).deep_dup
     
-    attribs = Hash[*attribs.flatten]
-    attribs['tracker_id'] = attribs['tracker_id'] || Setting.plugin_AgileDwarf[:tracker]
+    #attribs = Hash[*attribs.flatten]
+    #attribs['tracker_id'] = attribs['tracker_id'] || Setting.plugin_AgileDwarf[:tracker]
     
-	if !trackers_avail.include?(attribs['tracker_id'])    
-    	attribs['tracker_id']=@project.trackers().first()
+	  #if !trackers_avail.include?(attribs['tracker_id'])
+    #	attribs['tracker_id']=@project.trackers().first()
+    #end
+
+    #attribs['author_id'] = User.current.id
+    #task = SprintsTasks.new(attribs)
+    task = SprintsTasks.new
+
+    tracker_id = attribs.delete(:tracker_id)
+    tracker_id = Setting.plugin_AgileDwarf[:tracker] unless tracker_id.present?
+    unless trackers_avail.include?(tracker_id)
+    	tracker_id = @project.trackers.first
     end
 
-    attribs['author_id'] = User.current.id
-    task = SprintsTasks.new(attribs)
+    task.tracker_id = tracker_id
+    task.author_id = User.current.id
+    task.safe_attributes = attribs
     begin
       task.save!
     rescue => e

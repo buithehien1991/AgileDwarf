@@ -1,11 +1,5 @@
 class AdmytasksController < ApplicationController
-  unloadable
-
-
-	
-
-
-  #before_filter :authorize
+  #before_action :authorize
 
   def list
     # data for filters
@@ -40,11 +34,6 @@ class AdmytasksController < ApplicationController
       @columns << {:tasks => SprintsTasks.get_my_tasks_by_status(status_ids[i], sprint, user), :id => status_ids[i]}
     end
   end
-
-
-  
-  
-
 
   private
 
